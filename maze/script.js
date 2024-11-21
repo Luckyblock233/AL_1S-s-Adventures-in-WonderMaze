@@ -14,7 +14,6 @@ let trail = [];
 let generatedMaze;
 let solutionPath;
 
-let points = 0;
 const cols = 
     Math.floor(width / cellSize);
 const rows = 
@@ -33,6 +32,43 @@ const end = {
 
 let showPathFlag = 0;
 
+let steps = 0;
+let timer = null;
+let seconds = 0;
+
+const timerDisplay = document.getElementById('timer');
+const steprDisplay = document.getElementById('stepr');
+
+function formatTime(sec) {
+    const hrs = String(Math.floor(sec / 3600)).padStart(2, '0');
+    const mins = String(Math.floor((sec % 3600) / 60)).padStart(2, '0');
+    const secs = String(sec % 60).padStart(2, '0');
+    return `${hrs}:${mins}:${secs}`;
+}
+
+function updateDisplay() {
+    timerDisplay.textContent = 'Time: ' + formatTime(seconds);
+    steprDisplay.textContent = 'Steps: ' + steps;
+}
+
+function startDisplay() {
+    seconds = 0;
+    steps = 0;
+    if (timer == null) {
+        timer = setInterval(() => {
+            seconds++;
+            // console.log('sec++ after 1 seconds');
+            updateDisplay();
+        }, 1000);
+    }
+    updateDisplay();
+}
+
+function stopDisplay() {
+    clearInterval(timer);
+    timer = null;
+}
+
 document.querySelector('.startbtn').
     addEventListener('click', function () {
         Restart();
@@ -43,6 +79,7 @@ function Restart() {
     resetPlayerPos();
     clearScreen();
     setup();
+    startDisplay();
     draw();
     addListener();
     displayHidden();
@@ -93,15 +130,34 @@ function resetShowPath() {
     showPathFlag = 0;
 }
 
-function movePlayer(key, player) {
+function success() {
+    document.
+    removeEventListener('keydown', handleKeyPress);
+    stopDisplay();
+    
+    const messageBox = 
+        document.getElementsByClassName('msgbox')[0];
 
+    messageBox.innerHTML = "<h1>You Win!</h1>"
+    messageBox.innerHTML += "<h2 id='moves'>Steps: " + steps + "</h2>";
+    messageBox.innerHTML += "<h2 id='times'>Time Cost: " + formatTime(seconds) + "</h2>";
+    messageBox.innerHTML += 
+    `<button id='done' onclick='location.reload()'>
+        Play Again
+    </button>`
+    messageBox.style.fontSize = "0.8em";
+    messageBox.style.fontFamily = 'Monospace';
+    messageBox.style.visibility = "visible";
+}
+
+function movePlayer(key, player) {
     switch (key) {
         case 'ArrowUp':
             if (player.y > 0 && 
                 cells[player.x][player.y].
                 walls.top === false) {
                 player.y--;
-                points++;
+                steps++;
             }
             break;
         case 'ArrowDown':
@@ -109,7 +165,7 @@ function movePlayer(key, player) {
                 cells[player.x][player.y].
                 walls.bottom === false) {
                 player.y++;
-                points++;
+                steps++;
             }
             break;
         case 'ArrowLeft':
@@ -117,7 +173,7 @@ function movePlayer(key, player) {
                 cells[player.x][player.y].
                 walls.left === false) {
                 player.x--;
-                points++;
+                steps++;
             }
             break;
         case 'ArrowRight':
@@ -125,10 +181,12 @@ function movePlayer(key, player) {
                 cells[player.x][player.y].
                 walls.right === false) {
                 player.x++;
-                points++;
+                steps++;
             }
             break;
     }
+    
+    updateDisplay();
 
     const isTwice = trail.some(
         cell => cell.x === player.x && 
@@ -137,25 +195,9 @@ function movePlayer(key, player) {
         trail.pop();
         return ;
     }
-
+    
     if (player.x == cols - 1 && player.y == rows - 1) {
-        document.
-        removeEventListener('keydown', handleKeyPress);
-        const messageBox = 
-            document.getElementsByClassName('msgbox')[0];
-
-        messageBox.innerHTML = "<h1>You Won!</h1>"
-        messageBox.innerHTML += "<h2 id='moves'>Moves</h2>"
-        messageBox.innerHTML += 
-        `<button id='done' onclick='location.reload()'>
-            Play Again
-        </button>`
-        document.getElementById('moves').innerHTML = "Steps: " + points;
-        messageBox.style.fontSize = "0.8em"
-        messageBox.style.color = "black"
-        messageBox.style.fontFamily = 
-        'Monospace';
-        messageBox.style.visibility = "visible";
+        success();
     }
 }
 
@@ -270,7 +312,7 @@ function genMaze(x, y) {
 function resetPlayerPos() {
     player1.x = 0;
     player1.y = 0;
-    points = 0;
+    steps = 0;
     trail = [];
 }
 
