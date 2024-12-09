@@ -7,7 +7,6 @@ const width = canvas.width;
 const height = canvas.height;
 let cellSize = 40;
 
-const playerRadius = cellSize / 2 - 5;
 const endRadius = cellSize / 2 - 5;
 
 let trail = [];
@@ -21,7 +20,6 @@ const rows =
 const player1 = {
     x: 0,
     y: 0,
-    color: 'red',
 };
 
 const end = {
