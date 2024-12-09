@@ -37,7 +37,7 @@ let timer = null;
 let seconds = 0;
 
 const timerDisplay = document.getElementById('timer');
-const steprDisplay = document.getElementById('stepr');
+const steperDisplay = document.getElementById('steper');
 
 function formatTime(sec) {
     const hrs = String(Math.floor(sec / 3600)).padStart(2, '0');
@@ -48,7 +48,7 @@ function formatTime(sec) {
 
 function updateDisplay() {
     timerDisplay.textContent = 'Time: ' + formatTime(seconds);
-    steprDisplay.textContent = 'Steps: ' + steps;
+    steperDisplay.textContent = 'Steps: ' + steps;
 }
 
 function startDisplay() {

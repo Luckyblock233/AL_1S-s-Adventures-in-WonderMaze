@@ -159,13 +159,9 @@ p {
     font-weight: bold;
     position: relative;
     display: inline-block;
-
-    /* background-color: #80ed99; */
-    /* border-radius: 5px; */
-    /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
 }
 
-#stepr {
+#steper {
     min-width: 120px;
     height: 25px;
     margin-bottom: 10px;
@@ -176,8 +172,4 @@ p {
     font-weight: bold;
     position: relative;
     display: inline-block;
-
-    /* background-color: #80ed99; */
-    /* border-radius: 5px; */
-    /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
 }
